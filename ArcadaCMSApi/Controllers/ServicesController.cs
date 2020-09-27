@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ArcadaCMSApi.Interfaces;
+using ArcadaCMSApi.Models;
+using Nancy.Json;
 
 namespace ArcadaCMSApi.Controllers
 {
@@ -15,8 +17,8 @@ namespace ArcadaCMSApi.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly ILogger<ServicesController> _logger;
-        private readonly IserviceUseCase _serviceUseCase;
-        public ServicesController(ILogger<ServicesController> logger, IserviceUseCase serviceUseCase)
+        private readonly IServiceUseCase _serviceUseCase;
+        public ServicesController(ILogger<ServicesController> logger, IServiceUseCase serviceUseCase)
         {
             _logger = logger;
             _serviceUseCase = serviceUseCase;
@@ -27,11 +29,11 @@ namespace ArcadaCMSApi.Controllers
         {
             try
             {
-                var response = _serviceUseCase.GetAll();
-                _logger.LogInformation("Get get get");
-                return StatusCode(200, response);
+                var result = _serviceUseCase.GetAll();
+                _logger.LogInformation("Getting all services...");
+                return StatusCode(200, result);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation($"Caught exception: {e.Message}");
                 return StatusCode(500, e.Message);
@@ -39,12 +41,19 @@ namespace ArcadaCMSApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody] Service service)
         {
             try
             {
-                _logger.LogInformation("Post post post");
-                return StatusCode(200, "Hi!");
+                Boolean result = _serviceUseCase.Create(service);
+                _logger.LogInformation("Posting a service...");
+                if (result)
+                {
+                    return StatusCode(201, "message: Service created!");
+                } else
+                {
+                    return StatusCode(400, "message: Service couldn't be created");
+                }
             }
             catch (Exception e)
             {

@@ -35,7 +35,7 @@ namespace ArcadaCMSApi
 
             // Inject IDbConnection, with implementation from SqlConnection class.
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(dbConnectionString));
-            services.AddScoped<IserviceUseCase ,serviceUseCase>();
+            services.AddScoped<IServiceUseCase ,ServiceUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

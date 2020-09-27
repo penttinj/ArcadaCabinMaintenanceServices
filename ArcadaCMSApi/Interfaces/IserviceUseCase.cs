@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ArcadaCMSApi.Interfaces
 {
-    public interface IserviceUseCase
+    public interface IServiceUseCase
     {
-        IEnumerable<Room> GetAll();
+        IEnumerable<Service> GetAll();
+        Boolean Create(Service service);
     }
 }

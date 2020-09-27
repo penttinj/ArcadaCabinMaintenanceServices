@@ -10,19 +10,29 @@ using System.Threading.Tasks;
 
 namespace ArcadaCMSApi.UseCases
 {
-    public class serviceUseCase : IserviceUseCase
+    public class ServiceUseCase : IServiceUseCase
     {
         private readonly IDbConnection _sql;
-        public serviceUseCase(IDbConnection sql)
+        public ServiceUseCase(IDbConnection sql)
         {
             _sql = sql;
         }
         
-        public IEnumerable<Room> GetAll()
+        public Boolean Create(Service service)
         {
-            const string query = "INSERT INTO Rooms (name, seats, computers) VALUES ('ACMS', 4, 2)";
+            const string query = "INSERT INTO Services (ServiceType, Description, Price) VALUES (@ServiceType, @Description, @Price)";
 
-            return _sql.Query<Room>(query);
+            var result = _sql.Query(query, service);
+
+            return true;
+
+        }
+
+        public IEnumerable<Service> GetAll()
+        {
+            const string query = "SELECT * from Services";
+
+            return _sql.Query<Service>(query);
         }
     }
 }
