@@ -1,5 +1,8 @@
+using ArcadaCMSApi.UseCases;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ArcadaCMSApi.Interfaces;
 
-namespace MaintenanceServicesApi
+namespace ArcadaCMSApi
 {
     public class Startup
     {
@@ -25,7 +29,13 @@ namespace MaintenanceServicesApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
+            // Read the connection string from appsettings.
+            string dbConnectionString = this.Configuration.GetConnectionString("ApiDatabase");
+
+            // Inject IDbConnection, with implementation from SqlConnection class.
+            services.AddTransient<IDbConnection>((sp) => new SqlConnection(dbConnectionString));
+            services.AddScoped<IserviceUseCase ,serviceUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

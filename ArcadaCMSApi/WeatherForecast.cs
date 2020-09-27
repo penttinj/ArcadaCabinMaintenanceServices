@@ -1,6 +1,6 @@
 using System;
 
-namespace MaintenanceServicesApi
+namespace ArcadaCMSApi
 {
     public class WeatherForecast
     {
