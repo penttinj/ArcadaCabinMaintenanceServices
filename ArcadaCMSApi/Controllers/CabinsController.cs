@@ -21,31 +21,30 @@ namespace ArcadaCMSApi.Controllers
         private readonly ILogger<CabinsController> _logger;
         private HttpClient client;
         private CabinsUseCase cabinsUseCase;
-        private string jwt;
         public CabinsController(ILogger<CabinsController> logger)
         {
             _logger = logger;
             client = new HttpClient();
             cabinsUseCase = new CabinsUseCase(client);
-            jwt = "";
         }
 
         // GET /cabins
         [HttpGet]
         public async Task<IActionResult> Get([FromHeader] string Authorization = "noToken")
         {
-            _logger.LogInformation($"HeAdEr1 {Authorization}");
-            jwt = Authorization;
             try
             {
                 _logger.LogInformation("Getting all cabins...");
-                var cabins = await cabinsUseCase.GetAll(jwt);
+                var result = await cabinsUseCase.GetAllCabinsAsync(Authorization);
+                var response = StatusCode(200, result.Cabins);
+                if (result.Cabins.Count == 0)
+                {
+                    return NotFound();
+                }
+                
+                Response.Headers.Add("Authorization", result.Jwt.Scheme);
 
-
-
-
-
-                return StatusCode(200, cabins);
+                return StatusCode(200, result.Cabins);
             }
             catch (Exception e)
             {
@@ -55,13 +54,21 @@ namespace ArcadaCMSApi.Controllers
         }
         // GET /cabins/<email>
         [HttpGet("{email}")]
-        public IActionResult GetOne()
+        public async Task<IActionResult> GetCabinsByEmail(string email, [FromHeader] string Authorization = "noToken")
         {
+                _logger.LogInformation($"Getting cabins by email: {email}");
             try
             {
-                var result = "";
-                _logger.LogInformation("Getting all cabins...");
-                return StatusCode(200, result);
+                var result = await cabinsUseCase.GetByEmailAsync(Authorization, email);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                Response.Headers.Add("Authorization", result.Jwt.Scheme);
+
+                return StatusCode(200, result.Cabins);
             }
             catch (Exception e)
             {

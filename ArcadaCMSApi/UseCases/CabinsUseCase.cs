@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,10 +20,11 @@ using System.Threading.Tasks;
 
 namespace ArcadaCMSApi.UseCases
 {
-    public class CabinsListResponse
+    public class CabinsResult
     {
         public List<Cabin> Cabins { get; set; }
         public AuthenticationHeaderValue Jwt { get; set; }
+        public Cabin cabin { get; set; }
     }
 
     public class ResponseMessageAndToken
@@ -47,27 +49,72 @@ namespace ArcadaCMSApi.UseCases
 
 
 
-        public async Task<List<Cabin>> GetAll(string token)
+        public async Task<CabinsResult> GetAllCabinsAsync(string token)
         {
             try
             {
-                var qwe = new CabinsListResponse();
                 var responseMessage = await ApiRequest("https://arcada-cabin-broker.azurewebsites.net/cabins/", token);
                 
                 var content = responseMessage.ResponseMessage.Content;
                 var json = await content.ReadAsStringAsync();
 
 
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                CabinsResponse body = js.Deserialize<CabinsResponse>(json);
+                var js = new JavaScriptSerializer();
+                var body = js.Deserialize<CabinsResponse>(json);
                 var cabins = new List<Cabin>(body.cabins);
-                return cabins;
+                var cabinsAndJwt = new CabinsResult();
+                cabinsAndJwt.Cabins = cabins;
+                cabinsAndJwt.Jwt = responseMessage.Jwt;
+                return cabinsAndJwt;
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
+        }
 
+        public async Task<CabinsResult> GetByEmailAsync(string token, string email)
+        {
+            try
+            {
+                var responseMessage = await ApiRequest("https://arcada-cabin-broker.azurewebsites.net/cabins/", token);
+
+                var content = responseMessage.ResponseMessage.Content;
+                var json = await content.ReadAsStringAsync();
+
+
+                var js = new JavaScriptSerializer();
+                var body = js.Deserialize<CabinsResponse>(json);
+                var cabins = new List<Cabin>(body.cabins);
+                var emailCabins = FindCabinsByEmail(cabins, email);
+
+                if (emailCabins.Count == 0)
+                {
+                    return null;
+                }
+
+                var cabinsAndJwt = new CabinsResult();
+                cabinsAndJwt.Cabins = emailCabins;
+                cabinsAndJwt.Jwt = responseMessage.Jwt;
+                return cabinsAndJwt;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        private List<Cabin> FindCabinsByEmail(List<Cabin> cabins, string email)
+        {
+            var foundCabins = new List<Cabin>();
+            foreach (Cabin cabin in cabins)
+            {
+                if (cabin.owner.email.ToLower() == email.ToLower())
+                {
+                    foundCabins.Add(cabin);
+                }
+            }
+            return foundCabins;
         }
 
         public async Task<ResponseMessageAndToken> ApiRequest(string uri, string token)
@@ -80,7 +127,7 @@ namespace ArcadaCMSApi.UseCases
             request.Headers.Authorization = new AuthenticationHeaderValue(token);
             var message = await client.SendAsync(request);
 
-
+            // If the JWT token was invalid, login to get valid JWT then do the request.
             if (message.StatusCode == HttpStatusCode.Unauthorized)
             {
                 var newRequest = new HttpRequestMessage()
@@ -89,11 +136,11 @@ namespace ArcadaCMSApi.UseCases
                     Method = HttpMethod.Get
                 };
                 string newToken = await LoginToBroker();
-                AuthenticationHeaderValue authValue = new AuthenticationHeaderValue(newToken);
-                newRequest.Headers.Authorization = authValue;
+                AuthenticationHeaderValue jwt = new AuthenticationHeaderValue(newToken);
+                newRequest.Headers.Authorization = jwt;
                 var newMessage = await client.SendAsync(newRequest);
 
-                return new ResponseMessageAndToken(newMessage, authValue);
+                return new ResponseMessageAndToken(newMessage, jwt);
             }
             
             IEnumerable<string> values;
