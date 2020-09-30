@@ -10,6 +10,7 @@ using ArcadaCMSApi.Interfaces;
 using ArcadaCMSApi.Models;
 using Nancy.Json;
 using System.Net.Http;
+using System.Net;
 
 namespace ArcadaCMSApi.Controllers
 {
@@ -20,21 +21,25 @@ namespace ArcadaCMSApi.Controllers
         private readonly ILogger<CabinsController> _logger;
         private HttpClient client;
         private CabinsUseCase cabinsUseCase;
+        private string jwt;
         public CabinsController(ILogger<CabinsController> logger)
         {
             _logger = logger;
             client = new HttpClient();
             cabinsUseCase = new CabinsUseCase(client);
+            jwt = "";
         }
 
         // GET /cabins
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromHeader] string Authorization = "noToken")
         {
+            _logger.LogInformation($"HeAdEr1 {Authorization}");
+            jwt = Authorization;
             try
             {
                 _logger.LogInformation("Getting all cabins...");
-                var cabins = await cabinsUseCase.GetAll("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjcyMWZlZGEwN2I4MDAwMzUwYjllOWEiLCJlbWFpbCI6InBlZ2d5X2hvcGtpbnNAZXhhbXBsZS5vcmciLCJpYXQiOjE2MDE0MDk5MTksImV4cCI6MTYwMTQxMDgxOX0.jE2HT2PToIPV4TB571o4w0kkUTWqtSaNF-p0QM3TZCo");
+                var cabins = await cabinsUseCase.GetAll(jwt);
 
 
 
@@ -44,7 +49,6 @@ namespace ArcadaCMSApi.Controllers
             }
             catch (Exception e)
             {
-                var stack = e;
                 _logger.LogInformation($"Caught exception: {e.Message}");
                 return StatusCode(500, e.Message);
             }
