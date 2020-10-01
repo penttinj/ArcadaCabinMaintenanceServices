@@ -30,12 +30,13 @@ namespace ArcadaCMSApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
-            // Read the connection string from appsettings.
+            // Read the connection string from appsettings.json
             string dbConnectionString = this.Configuration.GetConnectionString("ApiDatabase");
 
             // Inject IDbConnection, with implementation from SqlConnection class.
             services.AddTransient<IDbConnection>((sp) => new SqlConnection(dbConnectionString));
-            services.AddScoped<IServiceUseCase ,ServiceUseCase>();
+            services.AddScoped<IServiceUseCase, ServiceUseCase>();
+            services.AddScoped<IReservationsUseCase, ReservationsUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

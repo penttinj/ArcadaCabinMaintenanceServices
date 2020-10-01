@@ -24,6 +24,7 @@ namespace ArcadaCMSApi.Controllers
             _serviceUseCase = serviceUseCase;
         }
 
+
         [HttpGet]
         public IActionResult Get()
         {
@@ -45,6 +46,7 @@ namespace ArcadaCMSApi.Controllers
             }
         }
 
+
         [HttpPost]
         public IActionResult Post([FromBody] Service service)
         {
@@ -54,7 +56,7 @@ namespace ArcadaCMSApi.Controllers
                 int result = _serviceUseCase.Create(service);
                 if (result > 0)
                 {
-                    return StatusCode(201, "message: Service created!");
+                    return StatusCode(201, service);
                 }
                 else
                 {
@@ -95,6 +97,7 @@ namespace ArcadaCMSApi.Controllers
                 return StatusCode(500, e.Message);
             }
         }
+
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
