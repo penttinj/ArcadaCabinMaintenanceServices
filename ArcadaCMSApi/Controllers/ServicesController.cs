@@ -29,9 +29,14 @@ namespace ArcadaCMSApi.Controllers
         {
             try
             {
-                var result = _serviceUseCase.GetAll();
                 _logger.LogInformation("Getting all services...");
-                return StatusCode(200, result);
+                var result = _serviceUseCase.GetAll();
+                if (result.Count() > 0)
+                {
+                    return StatusCode(200, result);
+                }
+
+                return NotFound();
             }
             catch (Exception e)
             {
@@ -43,11 +48,11 @@ namespace ArcadaCMSApi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Service service)
         {
+            _logger.LogInformation("Posting a service...");
             try
             {
-                Boolean result = _serviceUseCase.Create(service);
-                _logger.LogInformation("Posting a service...");
-                if (result)
+                int result = _serviceUseCase.Create(service);
+                if (result > 0)
                 {
                     return StatusCode(201, "message: Service created!");
                 }
@@ -64,13 +69,25 @@ namespace ArcadaCMSApi.Controllers
         }
 
 
-        [HttpPut]
-        public IActionResult Put()
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Service service)
         {
             try
             {
-                _logger.LogInformation("Put put put");
-                return StatusCode(200, "Hi!");
+                if (_serviceUseCase.isEmptyService(service))
+                {
+                    return BadRequest();
+                }
+
+
+                _logger.LogInformation($"Updating {id}");
+                IEnumerable<Service> result = _serviceUseCase.Update(id, service);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return StatusCode(200, result);
+
             }
             catch (Exception e)
             {
@@ -79,13 +96,19 @@ namespace ArcadaCMSApi.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult Delete()
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
             try
             {
-                _logger.LogInformation("Delete delete delete");
-                return StatusCode(200, "Hi!");
+                _logger.LogInformation($"Deleting service with id {id}");
+                int result = _serviceUseCase.Delete(id);
+                if (result > 0)
+                {
+                    // Deleted successfully, no message will be read by the client because of statuscode 204
+                    return StatusCode(204);
+                }
+                return NotFound();
             }
             catch (Exception e)
             {

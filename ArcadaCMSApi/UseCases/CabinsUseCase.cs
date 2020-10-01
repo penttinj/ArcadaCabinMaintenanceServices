@@ -24,7 +24,9 @@ namespace ArcadaCMSApi.UseCases
     {
         public List<Cabin> Cabins { get; set; }
         public AuthenticationHeaderValue Jwt { get; set; }
+#pragma warning disable IDE1006 // Naming Styles
         public Cabin cabin { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
     }
 
     public class ResponseMessageAndToken
@@ -41,7 +43,7 @@ namespace ArcadaCMSApi.UseCases
 
     public class CabinsUseCase
     {
-        HttpClient client;
+        readonly HttpClient client;
         public CabinsUseCase(HttpClient _client)
         {
             client = _client;
@@ -62,9 +64,11 @@ namespace ArcadaCMSApi.UseCases
                 var js = new JavaScriptSerializer();
                 var body = js.Deserialize<CabinsResponse>(json);
                 var cabins = new List<Cabin>(body.cabins);
-                var cabinsAndJwt = new CabinsResult();
-                cabinsAndJwt.Cabins = cabins;
-                cabinsAndJwt.Jwt = responseMessage.Jwt;
+                var cabinsAndJwt = new CabinsResult
+                {
+                    Cabins = cabins,
+                    Jwt = responseMessage.Jwt
+                };
                 return cabinsAndJwt;
             }
             catch (Exception e)
@@ -93,9 +97,11 @@ namespace ArcadaCMSApi.UseCases
                     return null;
                 }
 
-                var cabinsAndJwt = new CabinsResult();
-                cabinsAndJwt.Cabins = emailCabins;
-                cabinsAndJwt.Jwt = responseMessage.Jwt;
+                var cabinsAndJwt = new CabinsResult
+                {
+                    Cabins = emailCabins,
+                    Jwt = responseMessage.Jwt
+                };
                 return cabinsAndJwt;
             }
             catch (Exception e)
@@ -142,10 +148,9 @@ namespace ArcadaCMSApi.UseCases
 
                 return new ResponseMessageAndToken(newMessage, jwt);
             }
-            
-            IEnumerable<string> values;
+
             AuthenticationHeaderValue jwtFromMsg;
-            if (message.Headers.TryGetValues("Authorization", out values))
+            if (message.Headers.TryGetValues("Authorization", out IEnumerable<string> values))
             {
                 jwtFromMsg = new AuthenticationHeaderValue(values.First());
             }
@@ -165,8 +170,7 @@ namespace ArcadaCMSApi.UseCases
 
             HttpResponseMessage response = await client.PostAsync("https://arcada-cabin-broker.azurewebsites.net/users/login", content);
             var headers = response.Headers;
-            IEnumerable<string> values;
-            if (headers.TryGetValues("Authorization", out values))
+            if (headers.TryGetValues("Authorization", out IEnumerable<string> values))
             {
                 token = values.First();
             }

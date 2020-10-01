@@ -9,9 +9,9 @@ namespace ArcadaCMSApi.Models
     {
 #pragma warning disable IDE1006 // Naming Styles
         public int id { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-        public string Type { get; set; }
+        public string ServiceType { get; set; }
         public string Description { get; set; }
         public int Price { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

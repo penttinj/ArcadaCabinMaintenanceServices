@@ -9,6 +9,9 @@ namespace ArcadaCMSApi.Interfaces
     public interface IServiceUseCase
     {
         IEnumerable<Service> GetAll();
-        Boolean Create(Service service);
+        int Create(Service service);
+        IEnumerable<Service> Update(int id, Service service);
+        int Delete(int id);
+        bool isEmptyService(Service service);
     }
 }
