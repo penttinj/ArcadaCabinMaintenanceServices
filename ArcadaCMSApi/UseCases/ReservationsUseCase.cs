@@ -1,6 +1,7 @@
 ﻿using ArcadaCMSApi.Interfaces;
 using ArcadaCMSApi.Models;
 using Dapper;
+using Microsoft.AspNetCore.Http.Features;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ArcadaCMSApi.UseCases
 {
-    public class ReservationsUseCase: IReservationsUseCase
+    public class ReservationsUseCase : IReservationsUseCase
     {
         private readonly IDbConnection _sql;
         public ReservationsUseCase(IDbConnection sql)
@@ -20,35 +21,49 @@ namespace ArcadaCMSApi.UseCases
 
 
 
-        public IEnumerable<Reservation> GetAll()
+        public IEnumerable<ReservationResponse> GetAll()
         {
-            // TODO: Fill out Reservation info based on ServiceId, innerjoins?
-            const string query = "SELECT * from Reservations";
+            string query = "SELECT Reservations.*, Services.ServiceType, Services.Description, Services.Price " +
+                "FROM Reservations INNER JOIN Services ON Reservations.ServiceId = Services.id";
 
-            return _sql.Query<Reservation>(query);
+            var reservations = _sql.Query<ReservationResponse>(query);
+
+            return reservations;
         }
+
+
+        public IEnumerable<ReservationResponse> GetAll(string email)
+        {
+            string query = $"SELECT Reservations.*, Services.ServiceType, Services.Description, Services.Price " +
+                "from Reservations INNER JOIN Services ON Reservations.ServiceId = Services.id " +
+                $"WHERE CabinEmail = '{email}' ";
+
+            return _sql.Query<ReservationResponse>(query);
+        }
+
 
         public int Create(Reservation reservation)
         {
-            const string query = "INSERT INTO Reservations (ServiceType, Description, Price) VALUES (@ServiceType, @Description, @Price)";
+            const string query = "INSERT INTO Reservations (ServiceId, CabinId, CabinOwnerName, CabinEmail, CabinAddress, ScheduledDate) " +
+                "VALUES (@ServiceId, @CabinId, @CabinOwnerName, @CabinEmail, @CabinAddress, @ScheduledDate)";
 
             int affectedRows = _sql.Execute(query, reservation);
-            var insertedService = _sql.Query<Reservation>($"Select * from Reservations WHERE Description = '{reservation.Description}'");
 
             return affectedRows;
-
         }
 
         public IEnumerable<Reservation> Update(int id, Reservation reservation)
         {
             string s = "";
-            // Here comes stupid code :D
+            // Here comes stupid code :D again
 
-            s += (reservation.ServiceType != null) ? $" ServiceType='{reservation.ServiceType}'," : "";
-            s += (reservation.Description != null) ? $" Description='{reservation.Description}'," : "";
+            s += (reservation.ServiceId != 0) ? $" ServiceId='{reservation.ServiceId}'," : "";
+            s += (reservation.CabinId != null) ? $" CabinId='{reservation.CabinId}'," : "";
+            s += (reservation.CabinOwnerName != null) ? $" CabinOwnerName='{reservation.CabinOwnerName}'," : "";
+            s += (reservation.CabinEmail != null) ? $" CabinEmail='{reservation.CabinEmail}'," : "";
+            s += (reservation.CabinAddress != null) ? $" CabinAddress='{reservation.CabinAddress}'," : "";
+            s += (reservation.ScheduledDate != null) ? $" ScheduledDate='{reservation.ScheduledDate}'," : "";
 
-            // Price property defaults to 0 if it wasn't constructed, so if you initiate Price with 0 it won't be updated either! Hey nothing in life is free
-            s += (reservation.Price != 0) ? $" Price='{reservation.Price}'," : "";
 
             string updatedValues = s.EndsWith(",") ? s.Remove(s.Length - 1) : s;
 
@@ -76,7 +91,8 @@ namespace ArcadaCMSApi.UseCases
 
         public bool isEmptyReservation(Reservation reservation)
         {
-            return (reservation.ServiceType == null && reservation.Description == null && reservation.Price == 0);
+            return (reservation.ServiceId == 0 && reservation.CabinId == null && reservation.CabinOwnerName == null && reservation.CabinEmail == null
+                 && reservation.CabinAddress == null && reservation.ScheduledDate == null);
         }
 
     }

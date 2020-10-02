@@ -41,7 +41,7 @@ namespace ArcadaCMSApi.Controllers
                 {
                     return NotFound();
                 }
-                
+
                 Response.Headers.Add("Authorization", result.Jwt.Scheme);
 
                 return StatusCode(200, result.Cabins);
@@ -56,7 +56,7 @@ namespace ArcadaCMSApi.Controllers
         [HttpGet("{email}")]
         public async Task<IActionResult> GetCabinsByEmail(string email, [FromHeader] string Authorization = "noToken")
         {
-                _logger.LogInformation($"Getting cabins by email: {email}");
+            _logger.LogInformation($"Getting cabins by email: {email}");
             try
             {
                 var result = await cabinsUseCase.GetByEmailAsync(Authorization, email);

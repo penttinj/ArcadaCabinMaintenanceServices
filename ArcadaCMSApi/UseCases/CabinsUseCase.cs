@@ -56,7 +56,7 @@ namespace ArcadaCMSApi.UseCases
             try
             {
                 var responseMessage = await ApiRequest("https://arcada-cabin-broker.azurewebsites.net/cabins/", token);
-                
+
                 var content = responseMessage.ResponseMessage.Content;
                 var json = await content.ReadAsStringAsync();
 
@@ -178,7 +178,7 @@ namespace ArcadaCMSApi.UseCases
             {
                 throw new Exception("Authorization header not found from the response");
             }
-            
+
             return token;
         }
     }

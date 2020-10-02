@@ -3,7 +3,7 @@ GET https://localhost:44378/cabins HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjcyMWZlZGEwN2I4MDAwMzUwYjllOWEiLCJlbWFpbCI6InBlZ2d5X2hvcGtpbnNAZXhhbXBsZS5vcmciLCJpYXQiOjE2MDE0MTIwNzEsImV4cCI6MTYwMTQxMjk3MX0.TaVxC2yKTObYuLDAh1msXvSYoO2ik0xg5n1uY5TIdC0
 
 ### Get list of all cabins that an email owns
-GET https://localhost:44378/cabins/something@qwe.com HTTP/1.1
+GET https://localhost:44378/cabins/dianagalvan@example.com HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjcyMWZlZGEwN2I4MDAwMzUwYjllOWEiLCJlbWFpbCI6InBlZ2d5X2hvcGtpbnNAZXhhbXBsZS5vcmciLCJpYXQiOjE2MDE0MTIwNzEsImV4cCI6MTYwMTQxMjk3MX0.TaVxC2yKTObYuLDAh1msXvSYoO2ik0xg5n1uY5TIdC0
 
 ### Get all services
@@ -33,3 +33,38 @@ Content-Type: application/json
 
 ### Delete a service
 DELETE https://localhost:44378/services/5 HTTP/1.1
+
+
+
+### Create a reservation
+POST HTTPS://localhost:44378/reservations HTTP/1.1
+Content-Type: application/json
+
+
+{
+    "ServiceId": 3,
+    "CabinId": "5f722379a07b8000350b9ea2",
+    "CabinOwnerName": "Chong Merritt",
+    "CabinEmail": "chongmerritt@test.test",
+    "CabinAddress": "Massbyntie 93",
+    "ScheduledDate": "2020-11-2"
+    }
+
+### Get all reservations
+
+GET https://localhost:44378/reservations HTTP/1.1
+
+### Get all reservations by email
+GET https://localhost:44378/reservations/chongmerritt@test.test HTTP/1.1
+
+### Update a reservation
+PUT HTTPS://localhost:44378/reservations/9 HTTP/1.1
+Content-Type: application/json
+
+
+{
+    "ServiceId": 4,
+    }
+
+### DELETE a reservation
+DELETE HTTPS://localhost:44378/reservations/9 HTTP/1.1

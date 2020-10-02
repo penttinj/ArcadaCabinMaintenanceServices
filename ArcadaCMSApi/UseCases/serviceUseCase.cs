@@ -18,7 +18,7 @@ namespace ArcadaCMSApi.UseCases
             _sql = sql;
         }
 
-    
+
 
         public IEnumerable<Service> GetAll()
         {
@@ -52,11 +52,11 @@ namespace ArcadaCMSApi.UseCases
             string updatedValues = s.EndsWith(",") ? s.Remove(s.Length - 1) : s;
 
             string query = $"UPDATE Services SET {updatedValues} WHERE id = {id}";
-            
+
             int affectedRows = _sql.Execute(query);
             if (affectedRows > 0)
             {
-                return  _sql.Query<Service>($"Select * from Services WHERE id = '{id}'");
+                return _sql.Query<Service>($"Select * from Services WHERE id = '{id}'");
             }
 
             return null;
@@ -72,11 +72,11 @@ namespace ArcadaCMSApi.UseCases
 
         }
 
-        
+
         public bool isEmptyService(Service service)
         {
             return (service.ServiceType == null && service.Description == null && service.Price == 0);
         }
-       
+
     }
 }

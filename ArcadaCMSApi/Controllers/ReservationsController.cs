@@ -46,6 +46,27 @@ namespace ArcadaCMSApi.Controllers
             }
         }
 
+        [HttpGet("{email}")]
+        public IActionResult GetByEmail(string email)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting reservations with email {email}...");
+                var result = _ReservationsUseCase.GetAll(email);
+                if (result.Count() > 0)
+                {
+                    return StatusCode(200, result);
+                }
+
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation($"Caught exception: {e.Message}");
+                return StatusCode(500, e.Message);
+            }
+        }
+
 
         [HttpPost]
         public IActionResult Post([FromBody] Reservation reservation)

@@ -8,7 +8,8 @@ namespace ArcadaCMSApi.Interfaces
 {
     public interface IReservationsUseCase
     {
-        IEnumerable<Reservation> GetAll();
+        IEnumerable<ReservationResponse> GetAll();
+        IEnumerable<ReservationResponse> GetAll(string email);
         int Create(Reservation reservation);
         IEnumerable<Reservation> Update(int id, Reservation reservation);
         int Delete(int id);
