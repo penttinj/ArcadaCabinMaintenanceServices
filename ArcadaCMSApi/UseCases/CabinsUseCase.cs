@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -60,13 +61,14 @@ namespace ArcadaCMSApi.UseCases
                 var content = responseMessage.ResponseMessage.Content;
                 var json = await content.ReadAsStringAsync();
 
+                Console.WriteLine("OOMG BLYAD!! :D");
+                Debug.WriteLine("Coming from Debug");
 
                 var js = new JavaScriptSerializer();
                 var body = js.Deserialize<CabinsResponse>(json);
-                var cabins = new List<Cabin>(body.cabins);
                 var cabinsAndJwt = new CabinsResult
                 {
-                    Cabins = cabins,
+                    Cabins = new List<Cabin>(body.cabins),
                     Jwt = responseMessage.Jwt
                 };
                 return cabinsAndJwt;
@@ -102,6 +104,7 @@ namespace ArcadaCMSApi.UseCases
                     Cabins = emailCabins,
                     Jwt = responseMessage.Jwt
                 };
+
                 return cabinsAndJwt;
             }
             catch (Exception e)
@@ -120,6 +123,7 @@ namespace ArcadaCMSApi.UseCases
                     foundCabins.Add(cabin);
                 }
             }
+
             return foundCabins;
         }
 

@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcadaCMSApi", "ArcadaCMSApi\ArcadaCMSApi.csproj", "{97106F7D-F624-4948-A13F-29D2796D9C00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CabinServicesApp", "CabinServicesApp\CabinServicesApp.csproj", "{51B38F84-57C4-4E7D-BF67-7009F047FC2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{97106F7D-F624-4948-A13F-29D2796D9C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97106F7D-F624-4948-A13F-29D2796D9C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97106F7D-F624-4948-A13F-29D2796D9C00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51B38F84-57C4-4E7D-BF67-7009F047FC2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51B38F84-57C4-4E7D-BF67-7009F047FC2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51B38F84-57C4-4E7D-BF67-7009F047FC2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51B38F84-57C4-4E7D-BF67-7009F047FC2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
