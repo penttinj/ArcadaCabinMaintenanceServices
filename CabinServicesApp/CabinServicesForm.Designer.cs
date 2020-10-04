@@ -33,6 +33,15 @@
             this.WelcomeLabel = new System.Windows.Forms.Label();
             this.WelcomePanel = new System.Windows.Forms.Panel();
             this.LoggedInPanel = new System.Windows.Forms.Panel();
+            this.ModifyProgress = new System.Windows.Forms.ProgressBar();
+            this.FailModifyLabel = new System.Windows.Forms.Label();
+            this.ModifyButton = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
+            this.ModifyDate = new System.Windows.Forms.DateTimePicker();
+            this.CabinsCombo = new System.Windows.Forms.ComboBox();
+            this.ServicesCombo = new System.Windows.Forms.ComboBox();
+            this.FailSaveLabel = new System.Windows.Forms.Label();
+            this.SaveProgress = new System.Windows.Forms.ProgressBar();
             this.ChosenServiceInfo = new System.Windows.Forms.Label();
             this.ChosenCabinInfo = new System.Windows.Forms.Label();
             this.ReservationsList = new System.Windows.Forms.ListBox();
@@ -40,8 +49,7 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.ServicesList = new System.Windows.Forms.ListBox();
             this.CabinsList = new System.Windows.Forms.ListBox();
-            this.SaveProgress = new System.Windows.Forms.ProgressBar();
-            this.FailSaveLabel = new System.Windows.Forms.Label();
+            this.NoReservationLabel = new System.Windows.Forms.Label();
             this.WelcomePanel.SuspendLayout();
             this.LoggedInPanel.SuspendLayout();
             this.SuspendLayout();
@@ -88,6 +96,14 @@
             // 
             // LoggedInPanel
             // 
+            this.LoggedInPanel.Controls.Add(this.NoReservationLabel);
+            this.LoggedInPanel.Controls.Add(this.ModifyProgress);
+            this.LoggedInPanel.Controls.Add(this.FailModifyLabel);
+            this.LoggedInPanel.Controls.Add(this.ModifyButton);
+            this.LoggedInPanel.Controls.Add(this.DeleteButton);
+            this.LoggedInPanel.Controls.Add(this.ModifyDate);
+            this.LoggedInPanel.Controls.Add(this.CabinsCombo);
+            this.LoggedInPanel.Controls.Add(this.ServicesCombo);
             this.LoggedInPanel.Controls.Add(this.FailSaveLabel);
             this.LoggedInPanel.Controls.Add(this.SaveProgress);
             this.LoggedInPanel.Controls.Add(this.ChosenServiceInfo);
@@ -102,6 +118,89 @@
             this.LoggedInPanel.Size = new System.Drawing.Size(773, 475);
             this.LoggedInPanel.TabIndex = 5;
             this.LoggedInPanel.Visible = false;
+            // 
+            // ModifyProgress
+            // 
+            this.ModifyProgress.Location = new System.Drawing.Point(580, 351);
+            this.ModifyProgress.Name = "ModifyProgress";
+            this.ModifyProgress.Size = new System.Drawing.Size(100, 23);
+            this.ModifyProgress.TabIndex = 16;
+            this.ModifyProgress.Visible = false;
+            // 
+            // FailModifyLabel
+            // 
+            this.FailModifyLabel.AutoSize = true;
+            this.FailModifyLabel.ForeColor = System.Drawing.Color.Red;
+            this.FailModifyLabel.Location = new System.Drawing.Point(565, 377);
+            this.FailModifyLabel.Name = "FailModifyLabel";
+            this.FailModifyLabel.Size = new System.Drawing.Size(135, 13);
+            this.FailModifyLabel.TabIndex = 15;
+            this.FailModifyLabel.Text = "Action failed to reservation!";
+            this.FailModifyLabel.Visible = false;
+            // 
+            // ModifyButton
+            // 
+            this.ModifyButton.Location = new System.Drawing.Point(649, 322);
+            this.ModifyButton.Name = "ModifyButton";
+            this.ModifyButton.Size = new System.Drawing.Size(75, 23);
+            this.ModifyButton.TabIndex = 13;
+            this.ModifyButton.Text = "Modify";
+            this.ModifyButton.UseVisualStyleBackColor = true;
+            this.ModifyButton.Click += new System.EventHandler(this.ModifyButton_Click);
+            // 
+            // DeleteButton
+            // 
+            this.DeleteButton.Location = new System.Drawing.Point(547, 322);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteButton.TabIndex = 12;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
+            // 
+            // ModifyDate
+            // 
+            this.ModifyDate.Location = new System.Drawing.Point(547, 284);
+            this.ModifyDate.Name = "ModifyDate";
+            this.ModifyDate.Size = new System.Drawing.Size(200, 20);
+            this.ModifyDate.TabIndex = 11;
+            // 
+            // CabinsCombo
+            // 
+            this.CabinsCombo.FormattingEnabled = true;
+            this.CabinsCombo.Location = new System.Drawing.Point(479, 257);
+            this.CabinsCombo.Name = "CabinsCombo";
+            this.CabinsCombo.Size = new System.Drawing.Size(169, 21);
+            this.CabinsCombo.TabIndex = 10;
+            this.CabinsCombo.Visible = false;
+            // 
+            // ServicesCombo
+            // 
+            this.ServicesCombo.FormattingEnabled = true;
+            this.ServicesCombo.Location = new System.Drawing.Point(649, 257);
+            this.ServicesCombo.Name = "ServicesCombo";
+            this.ServicesCombo.Size = new System.Drawing.Size(121, 21);
+            this.ServicesCombo.TabIndex = 9;
+            this.ServicesCombo.Visible = false;
+            // 
+            // FailSaveLabel
+            // 
+            this.FailSaveLabel.AutoSize = true;
+            this.FailSaveLabel.ForeColor = System.Drawing.Color.Red;
+            this.FailSaveLabel.Location = new System.Drawing.Point(135, 431);
+            this.FailSaveLabel.Name = "FailSaveLabel";
+            this.FailSaveLabel.Size = new System.Drawing.Size(131, 13);
+            this.FailSaveLabel.TabIndex = 8;
+            this.FailSaveLabel.Text = "Failed to save reservation!";
+            this.FailSaveLabel.Visible = false;
+            // 
+            // SaveProgress
+            // 
+            this.SaveProgress.Location = new System.Drawing.Point(134, 431);
+            this.SaveProgress.Name = "SaveProgress";
+            this.SaveProgress.Size = new System.Drawing.Size(100, 23);
+            this.SaveProgress.TabIndex = 7;
+            this.SaveProgress.Visible = false;
             // 
             // ChosenServiceInfo
             // 
@@ -129,6 +228,7 @@
             this.ReservationsList.Name = "ReservationsList";
             this.ReservationsList.Size = new System.Drawing.Size(232, 186);
             this.ReservationsList.TabIndex = 4;
+            this.ReservationsList.SelectedIndexChanged += new System.EventHandler(this.ReservationsList_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -167,24 +267,17 @@
             this.CabinsList.TabIndex = 0;
             this.CabinsList.SelectedIndexChanged += new System.EventHandler(this.CabinsList_SelectedIndexChanged);
             // 
-            // SaveProgress
+            // NoReservationLabel
             // 
-            this.SaveProgress.Location = new System.Drawing.Point(134, 431);
-            this.SaveProgress.Name = "SaveProgress";
-            this.SaveProgress.Size = new System.Drawing.Size(100, 23);
-            this.SaveProgress.TabIndex = 7;
-            this.SaveProgress.Visible = false;
-            // 
-            // FailSaveLabel
-            // 
-            this.FailSaveLabel.AutoSize = true;
-            this.FailSaveLabel.ForeColor = System.Drawing.Color.Red;
-            this.FailSaveLabel.Location = new System.Drawing.Point(135, 431);
-            this.FailSaveLabel.Name = "FailSaveLabel";
-            this.FailSaveLabel.Size = new System.Drawing.Size(131, 13);
-            this.FailSaveLabel.TabIndex = 8;
-            this.FailSaveLabel.Text = "Failed to save reservation!";
-            this.FailSaveLabel.Visible = false;
+            this.NoReservationLabel.AutoSize = true;
+            this.NoReservationLabel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.NoReservationLabel.ForeColor = System.Drawing.Color.IndianRed;
+            this.NoReservationLabel.Location = new System.Drawing.Point(565, 390);
+            this.NoReservationLabel.Name = "NoReservationLabel";
+            this.NoReservationLabel.Size = new System.Drawing.Size(141, 13);
+            this.NoReservationLabel.TabIndex = 17;
+            this.NoReservationLabel.Text = "No reservation was selected";
+            this.NoReservationLabel.Visible = false;
             // 
             // CabinServicesForm
             // 
@@ -218,6 +311,14 @@
         private System.Windows.Forms.Label ChosenServiceInfo;
         private System.Windows.Forms.ProgressBar SaveProgress;
         private System.Windows.Forms.Label FailSaveLabel;
+        private System.Windows.Forms.Button ModifyButton;
+        private System.Windows.Forms.Button DeleteButton;
+        private System.Windows.Forms.DateTimePicker ModifyDate;
+        private System.Windows.Forms.ComboBox CabinsCombo;
+        private System.Windows.Forms.ComboBox ServicesCombo;
+        private System.Windows.Forms.ProgressBar ModifyProgress;
+        private System.Windows.Forms.Label FailModifyLabel;
+        private System.Windows.Forms.Label NoReservationLabel;
     }
 }
 

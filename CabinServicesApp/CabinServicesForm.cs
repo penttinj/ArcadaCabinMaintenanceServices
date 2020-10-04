@@ -23,6 +23,7 @@ namespace CabinServicesApp
         Service chosenService;
         System.DateTime chosenDateTime;
         string chosenDateString;
+        int chosenResId;
         public CabinServicesForm()
         {
             InitializeComponent();
@@ -48,6 +49,7 @@ namespace CabinServicesApp
                 WelcomePanel.Visible = false;
                 cabins = new List<Cabin>(cabinsResponse);
 
+                GetServices();
                 RenderCabins();
                 RenderReservations();
             }
@@ -57,7 +59,17 @@ namespace CabinServicesApp
             }
         }
 
-        private async void RenderCabins()
+        private async void GetServices()
+        {
+            var servicesResponse = await api.GetServices();
+            if (servicesResponse == null)
+            {
+                return;
+            }
+            services = new List<Service>(servicesResponse);
+        }
+
+        private void RenderCabins()
         {
             LoggedInPanel.Visible = true;
             foreach (Cabin cabin in cabins)
@@ -84,13 +96,6 @@ namespace CabinServicesApp
         {
             try
             {
-                var servicesResponse = await api.GetServices();
-                if (servicesResponse == null)
-                {
-                    return;
-                }
-                services = new List<Service>(servicesResponse);
-
                 ServicesList.Items.Clear();
 
                 foreach (Service service in services)
@@ -129,7 +134,7 @@ namespace CabinServicesApp
 
                 foreach (ReservationResponse res in reservations)
                 {
-                    ReservationsList.Items.Add($"{res.CabinAddress}, {res.ServiceType}, {res.ScheduledDate} ,{res.id}");
+                    ReservationsList.Items.Add($"{res.id}, {res.CabinAddress}, {res.ServiceType}, {res.ScheduledDate}");
                 }
             }
             catch (Exception ex)
@@ -160,17 +165,30 @@ namespace CabinServicesApp
 
         private void CabinsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var listBox = (ListBox)sender;
-            ChosenServiceInfo.Text = "";
-            RenderServices();
-            RenderCabinInfo(listBox.SelectedItem.ToString());
-
+            try
+            {
+                var listBox = (ListBox)sender;
+                ChosenServiceInfo.Text = "";
+                RenderServices();
+                RenderCabinInfo(listBox.SelectedItem.ToString());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void ServicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var listBox = (ListBox)sender;
-            RenderServiceInfo(listBox.SelectedItem.ToString());
+            try
+            {
+                var listBox = (ListBox)sender;
+                RenderServiceInfo(listBox.SelectedItem.ToString());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
@@ -186,6 +204,10 @@ namespace CabinServicesApp
         {
             try
             {
+                ClearModifyFields();
+
+                CabinsCombo.Visible = false;
+                ServicesCombo.Visible = false;
                 FailSaveLabel.Visible = false;
                 SaveProgress.Visible = true;
                 SaveProgress.Value = 0;
@@ -216,6 +238,174 @@ namespace CabinServicesApp
             {
                 Debug.WriteLine("Exception saving reservation: " + ex.Message);
             }
+        }
+
+        private void ReservationsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var listBox = (ListBox)sender;
+                RenderModification(listBox.SelectedItem.ToString());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void RenderModification(string resItem)
+        {
+            chosenResId = Int32.Parse(resItem.Split(',')[0]);
+            var res = reservations.Find(r => r.id == chosenResId);
+            var cabinInRes = cabins.Find(c => c._id == res.CabinId);
+            var serviceInRes = services.Find(s => s.id == res.ServiceId);
+
+            CabinsCombo.Items.Clear();
+            ServicesCombo.Items.Clear();
+
+            foreach (Cabin cabin in cabins)
+            {
+                CabinsCombo.Items.Add($"{cabin.address} ,{cabin._id}");
+            }
+            foreach (Service service in services)
+            {
+                ServicesCombo.Items.Add($"{service.id}, {service.ServiceType}");
+            }
+
+            ServicesCombo.SelectedItem = res.ServiceId;
+
+            CabinsCombo.Visible = true;
+            ServicesCombo.Visible = true;
+
+            Debug.WriteLine("Service combo selected item:");
+            Debug.WriteLine(ServicesCombo.SelectedItem);
+            Debug.WriteLine("cabin combo selected item:");
+            Debug.WriteLine(CabinsCombo.SelectedItem);
+        }
+
+        private async void ModifyButton_Click(object sender, EventArgs e)
+        {
+            ClearModifyFields();
+
+            // Checks that a reservation is actually chosen. 0 is a default for no cabin chosen.
+            if (chosenResId == 0)
+            {
+                NoReservationLabel.Visible = true;
+                return;
+            }
+            string modifiedCabinId = null;
+            string modifiedCabinAddress = null;
+            int modifiedServiceId = 0;
+            string modifiedDateString = null;
+
+            // Spammy code I know... too lazy to find more concise way.
+            try
+            {
+                modifiedCabinAddress = CabinsCombo.SelectedItem.ToString().Split(',')[0];
+                modifiedCabinId = CabinsCombo.SelectedItem.ToString().Split(',')[1];
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Some modifications were empty: " + ex.Message);
+            }
+            try
+            {
+                modifiedServiceId = Int32.Parse(ServicesCombo.SelectedItem.ToString().Split(',')[0]);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Some modifications were empty: " + ex.Message);
+            }
+            try
+            {
+                var modifiedTime = ModifyDate.Value;
+                var splitted = modifiedTime.ToShortDateString().Split('.');
+                // Formats the date around so it gets accepted by sql database
+                modifiedDateString = $"{splitted[2]}-{splitted[1]}-{splitted[0]}";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Some modifications were empty: " + ex.Message);
+            }
+            try
+            {
+                CabinsCombo.Visible = false;
+                ServicesCombo.Visible = false;
+                FailModifyLabel.Visible = false;
+                ModifyProgress.Visible = true;
+                ModifyProgress.Value = 0;
+
+
+                var reservation = new Reservation();
+                if (modifiedServiceId != 0) reservation.ServiceId = modifiedServiceId;
+                if (modifiedDateString != null) reservation.ScheduledDate = modifiedDateString;
+                if (modifiedCabinId != null)
+                {
+                    reservation.CabinId = modifiedCabinId;
+                    reservation.CabinAddress = modifiedCabinAddress;
+                }
+
+                var result = await api.ModifyReservation(reservation, chosenResId);
+
+                if (result)
+                {
+                    ModifyProgress.Value = 100;
+                    NoReservationLabel.Visible = false;
+                    chosenResId = 0;
+                    RenderReservations();
+                }
+                else
+                {
+                    Debug.WriteLine("Failed modify");
+                    ModifyProgress.Visible = false;
+                    FailModifyLabel.Visible = true;
+                    chosenResId = 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception saving reservation: " + ex.Message);
+            }
+        }
+
+        private async void DeleteButton_Click(object sender, EventArgs e)
+        {
+            ClearModifyFields();
+
+            if (chosenResId == 0)
+            {
+                NoReservationLabel.Visible = true;
+                return;
+            }
+
+            CabinsCombo.Visible = false;
+            ServicesCombo.Visible = false;
+            FailModifyLabel.Visible = false;
+            ModifyProgress.Visible = true;
+            ModifyProgress.Value = 0;
+
+            var result = await api.DeleteReservation(chosenResId);
+            if (result)
+            {
+                ModifyProgress.Value = 100;
+                NoReservationLabel.Visible = false;
+                chosenResId = 0;
+                RenderReservations();
+            }
+            else
+            {
+                Debug.WriteLine("Failed delete");
+                ModifyProgress.Visible = false;
+                FailModifyLabel.Visible = true;
+                chosenResId = 0;
+            }
+        }
+
+        private void ClearModifyFields()
+        {
+            CabinsCombo.SelectedIndex = -1;
+            ServicesCombo.SelectedIndex = -1;
         }
     }
 }

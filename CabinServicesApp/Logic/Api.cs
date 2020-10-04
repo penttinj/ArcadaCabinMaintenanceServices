@@ -120,5 +120,31 @@ namespace CabinServicesApp.Logic
             }
             return false;
         }
+
+        public async Task<bool> ModifyReservation(Reservation reservation, int reservationId)
+        {
+            HttpClient client = new HttpClient();
+            string jsonObject = new JavaScriptSerializer().Serialize(reservation);
+            StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync($"https://localhost:44378/reservations/{reservationId}", content);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteReservation(int reservationId)
+        {
+            HttpClient client = new HttpClient();
+
+            var response = await client.DeleteAsync($"https://localhost:44378/reservations/{reservationId}");
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
