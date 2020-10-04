@@ -17,9 +17,9 @@ namespace CabinServicesApp.Logic
 
         // public static string Jwt { get => jwt; set => jwt = value; }
 
-        public async Task<List<CabinsResponse>> GetCabins(string email)
+        public async Task<Cabin[]> GetCabins(string email)
         {
-            // Send GET request to /cabins
+            // Send GET request to /cabins/<email>
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
@@ -37,7 +37,7 @@ namespace CabinServicesApp.Logic
             HttpContent content = message.Content;
             string json = await content.ReadAsStringAsync();
 
-            // Get the auth header from ACMSApi response
+            // Get the auth header from ACMSApi response and assign it to jwt
             if (message.Headers.TryGetValues("Authorization", out IEnumerable<string> values))
             {
                 jwt = new AuthenticationHeaderValue(values.First()).Scheme;
@@ -49,9 +49,36 @@ namespace CabinServicesApp.Logic
 
             JavaScriptSerializer js = new JavaScriptSerializer();
 
-            var cabinsResponse = js.Deserialize<List<CabinsResponse>>(json);
+            var cabinsResponse = js.Deserialize<Cabin[]>(json);
 
             return cabinsResponse;
+        }
+
+        public async Task<IEnumerable<Service>> GetServices()
+        {
+            // Send GET request to /services
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri($"https://localhost:44378/services"),
+                Method = HttpMethod.Get
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue(jwt);
+            HttpResponseMessage message = await client.SendAsync(request);
+
+            if (message.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            HttpContent content = message.Content;
+            string json = await content.ReadAsStringAsync();
+
+            JavaScriptSerializer js = new JavaScriptSerializer();
+
+            var services = js.Deserialize<IEnumerable<Service>>(json);
+
+            return services;
         }
 
         public async Task SaveReservation(Reservation reservation)

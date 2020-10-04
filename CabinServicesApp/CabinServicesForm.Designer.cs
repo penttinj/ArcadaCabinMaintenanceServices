@@ -33,13 +33,13 @@
             this.WelcomeLabel = new System.Windows.Forms.Label();
             this.WelcomePanel = new System.Windows.Forms.Panel();
             this.LoggedInPanel = new System.Windows.Forms.Panel();
-            this.CabinsList = new System.Windows.Forms.ListBox();
-            this.ServicesList = new System.Windows.Forms.ListBox();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.button1 = new System.Windows.Forms.Button();
-            this.Reservations = new System.Windows.Forms.ListBox();
-            this.ChosenCabinInfo = new System.Windows.Forms.Label();
             this.ChosenServiceInfo = new System.Windows.Forms.Label();
+            this.ChosenCabinInfo = new System.Windows.Forms.Label();
+            this.Reservations = new System.Windows.Forms.ListBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.ServicesList = new System.Windows.Forms.ListBox();
+            this.CabinsList = new System.Windows.Forms.ListBox();
             this.WelcomePanel.SuspendLayout();
             this.LoggedInPanel.SuspendLayout();
             this.SuspendLayout();
@@ -99,45 +99,14 @@
             this.LoggedInPanel.TabIndex = 5;
             this.LoggedInPanel.Visible = false;
             // 
-            // CabinsList
+            // ChosenServiceInfo
             // 
-            this.CabinsList.FormattingEnabled = true;
-            this.CabinsList.Location = new System.Drawing.Point(22, 44);
-            this.CabinsList.Name = "CabinsList";
-            this.CabinsList.Size = new System.Drawing.Size(211, 186);
-            this.CabinsList.TabIndex = 0;
-            // 
-            // ServicesList
-            // 
-            this.ServicesList.FormattingEnabled = true;
-            this.ServicesList.Location = new System.Drawing.Point(22, 237);
-            this.ServicesList.Name = "ServicesList";
-            this.ServicesList.Size = new System.Drawing.Size(211, 160);
-            this.ServicesList.TabIndex = 1;
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(22, 404);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(22, 431);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(200, 31);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // Reservations
-            // 
-            this.Reservations.FormattingEnabled = true;
-            this.Reservations.Location = new System.Drawing.Point(527, 44);
-            this.Reservations.Name = "Reservations";
-            this.Reservations.Size = new System.Drawing.Size(232, 186);
-            this.Reservations.TabIndex = 4;
+            this.ChosenServiceInfo.AutoSize = true;
+            this.ChosenServiceInfo.Location = new System.Drawing.Point(272, 237);
+            this.ChosenServiceInfo.Name = "ChosenServiceInfo";
+            this.ChosenServiceInfo.Size = new System.Drawing.Size(64, 13);
+            this.ChosenServiceInfo.TabIndex = 6;
+            this.ChosenServiceInfo.Text = "Service Info";
             // 
             // ChosenCabinInfo
             // 
@@ -149,14 +118,49 @@
             this.ChosenCabinInfo.Text = "Cabin Info";
             this.ChosenCabinInfo.Click += new System.EventHandler(this.ChosenCabinInfo_Click);
             // 
-            // ChosenServiceInfo
+            // Reservations
             // 
-            this.ChosenServiceInfo.AutoSize = true;
-            this.ChosenServiceInfo.Location = new System.Drawing.Point(272, 237);
-            this.ChosenServiceInfo.Name = "ChosenServiceInfo";
-            this.ChosenServiceInfo.Size = new System.Drawing.Size(64, 13);
-            this.ChosenServiceInfo.TabIndex = 6;
-            this.ChosenServiceInfo.Text = "Service Info";
+            this.Reservations.FormattingEnabled = true;
+            this.Reservations.Location = new System.Drawing.Point(527, 44);
+            this.Reservations.Name = "Reservations";
+            this.Reservations.Size = new System.Drawing.Size(232, 186);
+            this.Reservations.TabIndex = 4;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(22, 431);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(200, 31);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(22, 404);
+            this.dateTimePicker1.MinDate = new System.DateTime(2020, 10, 4, 0, 0, 0, 0);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
+            this.dateTimePicker1.TabIndex = 2;
+            this.dateTimePicker1.ValueChanged += new System.EventHandler(this.dateTimePicker1_ValueChanged);
+            // 
+            // ServicesList
+            // 
+            this.ServicesList.FormattingEnabled = true;
+            this.ServicesList.Location = new System.Drawing.Point(22, 237);
+            this.ServicesList.Name = "ServicesList";
+            this.ServicesList.Size = new System.Drawing.Size(211, 160);
+            this.ServicesList.TabIndex = 1;
+            this.ServicesList.SelectedIndexChanged += new System.EventHandler(this.ServicesList_SelectedIndexChanged);
+            // 
+            // CabinsList
+            // 
+            this.CabinsList.FormattingEnabled = true;
+            this.CabinsList.Location = new System.Drawing.Point(22, 44);
+            this.CabinsList.Name = "CabinsList";
+            this.CabinsList.Size = new System.Drawing.Size(211, 186);
+            this.CabinsList.TabIndex = 0;
+            this.CabinsList.SelectedIndexChanged += new System.EventHandler(this.CabinsList_SelectedIndexChanged);
             // 
             // CabinServicesForm
             // 

@@ -3,7 +3,7 @@ GET https://localhost:44378/cabins HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjcyMWZlZGEwN2I4MDAwMzUwYjllOWEiLCJlbWFpbCI6InBlZ2d5X2hvcGtpbnNAZXhhbXBsZS5vcmciLCJpYXQiOjE2MDE0MTIwNzEsImV4cCI6MTYwMTQxMjk3MX0.TaVxC2yKTObYuLDAh1msXvSYoO2ik0xg5n1uY5TIdC0
 
 ### Get list of all cabins that an email owns
-GET https://localhost:44378/cabins/dianagalvan@example.com HTTP/1.1
+GET https://localhost:44378/cabins/chongmerritt@test.test HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjcyMWZlZGEwN2I4MDAwMzUwYjllOWEiLCJlbWFpbCI6InBlZ2d5X2hvcGtpbnNAZXhhbXBsZS5vcmciLCJpYXQiOjE2MDE0MTIwNzEsImV4cCI6MTYwMTQxMjk3MX0.TaVxC2yKTObYuLDAh1msXvSYoO2ik0xg5n1uY5TIdC0
 
 ### Get all services
