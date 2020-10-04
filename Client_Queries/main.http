@@ -55,7 +55,7 @@ Content-Type: application/json
 GET https://localhost:44378/reservations HTTP/1.1
 
 ### Get all reservations by email
-GET https://localhost:44378/reservations/chongmerritt@test.test HTTP/1.1
+GET https://localhost:44378/reservations/peggy_hopkins@example.org HTTP/1.1
 
 ### Update a reservation
 PUT HTTPS://localhost:44378/reservations/9 HTTP/1.1

@@ -20,7 +20,8 @@ namespace CabinServicesApp
         List<Service> services;
         Cabin chosenCabin;
         Service chosenService;
-        System.DateTime chosenDate;
+        System.DateTime chosenDateTime;
+        string chosenDateString;
         public CabinServicesForm()
         {
             InitializeComponent();
@@ -89,7 +90,7 @@ namespace CabinServicesApp
                 services = new List<Service>(servicesResponse);
 
                 ServicesList.Items.Clear();
-                
+
                 foreach (Service service in services)
                 {
                     ServicesList.Items.Add($"{service.ServiceType}, {service.Description}, {service.Price} € ,{service.id}");
@@ -137,7 +138,7 @@ namespace CabinServicesApp
             ChosenServiceInfo.Text = "";
             RenderServices();
             RenderCabinInfo(listBox.SelectedItem.ToString());
-            
+
         }
 
         private void ServicesList_SelectedIndexChanged(object sender, EventArgs e)
@@ -148,9 +149,31 @@ namespace CabinServicesApp
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            //chosenDate = (DateTimePicker)sender.
-            // sender.Value is System.DateTime
-            Debug.WriteLine("Clicked on a new date");
+            chosenDateTime = dateTimePicker1.Value;
+            chosenDateString = chosenDateTime.ToShortDateString();
+            var splitted = chosenDateString.Split('.');
+            chosenDateString = $"{splitted[2]}-{splitted[1]}-{splitted[0]}";
+        }
+
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var reservation = new Reservation()
+                {
+                    ServiceId = chosenService.id,
+                    CabinId = chosenCabin._id,
+                    CabinOwnerName = chosenCabin.ownerName,
+                    CabinEmail = chosenCabin.owner.email,
+                    CabinAddress = chosenCabin.address,
+                    ScheduledDate = chosenDateString
+                };
+                await api.SaveReservation(reservation);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception saving reservation: " + ex.Message);
+            }
         }
     }
 }

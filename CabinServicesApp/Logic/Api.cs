@@ -63,7 +63,7 @@ namespace CabinServicesApp.Logic
                 RequestUri = new Uri($"https://localhost:44378/services"),
                 Method = HttpMethod.Get
             };
-            request.Headers.Authorization = new AuthenticationHeaderValue(jwt);
+            
             HttpResponseMessage message = await client.SendAsync(request);
 
             if (message.StatusCode == HttpStatusCode.NotFound)
@@ -87,7 +87,7 @@ namespace CabinServicesApp.Logic
             string jsonObject = new JavaScriptSerializer().Serialize(reservation);
             StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
-            await client.PostAsync("http://localhost:63501/reservations", content);
+            await client.PostAsync("https://localhost:44378/reservations", content);
         }
     }
 }
