@@ -81,13 +81,44 @@ namespace CabinServicesApp.Logic
             return services;
         }
 
-        public async Task SaveReservation(Reservation reservation)
+        public async Task<ReservationResponse[]> GetReservations(string email)
+        {
+            // Send GET request to /cabins/<email>
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                RequestUri = new Uri($"https://localhost:44378/reservations/{email}"),
+                Method = HttpMethod.Get
+            };
+            HttpResponseMessage message = await client.SendAsync(request);
+
+            if (message.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+
+            HttpContent content = message.Content;
+            string json = await content.ReadAsStringAsync();
+
+            JavaScriptSerializer js = new JavaScriptSerializer();
+
+            var reservationsResponse = js.Deserialize<ReservationResponse[]>(json);
+
+            return reservationsResponse;
+        }
+
+        public async Task<bool> SaveReservation(Reservation reservation)
         {
             HttpClient client = new HttpClient();
             string jsonObject = new JavaScriptSerializer().Serialize(reservation);
             StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
-            await client.PostAsync("https://localhost:44378/reservations", content);
+            var response = await client.PostAsync("https://localhost:44378/reservations", content);
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

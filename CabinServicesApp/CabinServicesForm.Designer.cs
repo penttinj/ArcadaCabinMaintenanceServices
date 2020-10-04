@@ -35,11 +35,13 @@
             this.LoggedInPanel = new System.Windows.Forms.Panel();
             this.ChosenServiceInfo = new System.Windows.Forms.Label();
             this.ChosenCabinInfo = new System.Windows.Forms.Label();
-            this.Reservations = new System.Windows.Forms.ListBox();
+            this.ReservationsList = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.ServicesList = new System.Windows.Forms.ListBox();
             this.CabinsList = new System.Windows.Forms.ListBox();
+            this.SaveProgress = new System.Windows.Forms.ProgressBar();
+            this.FailSaveLabel = new System.Windows.Forms.Label();
             this.WelcomePanel.SuspendLayout();
             this.LoggedInPanel.SuspendLayout();
             this.SuspendLayout();
@@ -86,9 +88,11 @@
             // 
             // LoggedInPanel
             // 
+            this.LoggedInPanel.Controls.Add(this.FailSaveLabel);
+            this.LoggedInPanel.Controls.Add(this.SaveProgress);
             this.LoggedInPanel.Controls.Add(this.ChosenServiceInfo);
             this.LoggedInPanel.Controls.Add(this.ChosenCabinInfo);
-            this.LoggedInPanel.Controls.Add(this.Reservations);
+            this.LoggedInPanel.Controls.Add(this.ReservationsList);
             this.LoggedInPanel.Controls.Add(this.button1);
             this.LoggedInPanel.Controls.Add(this.dateTimePicker1);
             this.LoggedInPanel.Controls.Add(this.ServicesList);
@@ -118,19 +122,19 @@
             this.ChosenCabinInfo.Text = "Cabin Info";
             this.ChosenCabinInfo.Click += new System.EventHandler(this.ChosenCabinInfo_Click);
             // 
-            // Reservations
+            // ReservationsList
             // 
-            this.Reservations.FormattingEnabled = true;
-            this.Reservations.Location = new System.Drawing.Point(527, 44);
-            this.Reservations.Name = "Reservations";
-            this.Reservations.Size = new System.Drawing.Size(232, 186);
-            this.Reservations.TabIndex = 4;
+            this.ReservationsList.FormattingEnabled = true;
+            this.ReservationsList.Location = new System.Drawing.Point(527, 44);
+            this.ReservationsList.Name = "ReservationsList";
+            this.ReservationsList.Size = new System.Drawing.Size(232, 186);
+            this.ReservationsList.TabIndex = 4;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(22, 431);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(200, 31);
+            this.button1.Size = new System.Drawing.Size(106, 31);
             this.button1.TabIndex = 3;
             this.button1.Text = "Make Reservation";
             this.button1.UseVisualStyleBackColor = true;
@@ -163,6 +167,25 @@
             this.CabinsList.TabIndex = 0;
             this.CabinsList.SelectedIndexChanged += new System.EventHandler(this.CabinsList_SelectedIndexChanged);
             // 
+            // SaveProgress
+            // 
+            this.SaveProgress.Location = new System.Drawing.Point(134, 431);
+            this.SaveProgress.Name = "SaveProgress";
+            this.SaveProgress.Size = new System.Drawing.Size(100, 23);
+            this.SaveProgress.TabIndex = 7;
+            this.SaveProgress.Visible = false;
+            // 
+            // FailSaveLabel
+            // 
+            this.FailSaveLabel.AutoSize = true;
+            this.FailSaveLabel.ForeColor = System.Drawing.Color.Red;
+            this.FailSaveLabel.Location = new System.Drawing.Point(135, 431);
+            this.FailSaveLabel.Name = "FailSaveLabel";
+            this.FailSaveLabel.Size = new System.Drawing.Size(131, 13);
+            this.FailSaveLabel.TabIndex = 8;
+            this.FailSaveLabel.Text = "Failed to save reservation!";
+            this.FailSaveLabel.Visible = false;
+            // 
             // CabinServicesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -191,8 +214,10 @@
         private System.Windows.Forms.ListBox ServicesList;
         private System.Windows.Forms.ListBox CabinsList;
         private System.Windows.Forms.Label ChosenCabinInfo;
-        private System.Windows.Forms.ListBox Reservations;
+        private System.Windows.Forms.ListBox ReservationsList;
         private System.Windows.Forms.Label ChosenServiceInfo;
+        private System.Windows.Forms.ProgressBar SaveProgress;
+        private System.Windows.Forms.Label FailSaveLabel;
     }
 }
 

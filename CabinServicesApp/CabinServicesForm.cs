@@ -18,6 +18,7 @@ namespace CabinServicesApp
         Api api;
         List<Cabin> cabins;
         List<Service> services;
+        List<ReservationResponse> reservations;
         Cabin chosenCabin;
         Service chosenService;
         System.DateTime chosenDateTime;
@@ -48,6 +49,7 @@ namespace CabinServicesApp
                 cabins = new List<Cabin>(cabinsResponse);
 
                 RenderCabins();
+                RenderReservations();
             }
             catch (Exception ex)
             {
@@ -109,7 +111,31 @@ namespace CabinServicesApp
             ChosenServiceInfo.Text = $"" +
                 $" Type: {chosenService.ServiceType} " +
                 $"\n Description: {chosenService.Description}" +
-                $"\n Price: {chosenService.Price}";
+                $"\n Price: {chosenService.Price}€";
+        }
+
+        private async void RenderReservations()
+        {
+            try
+            {
+                string email = EmailTextBox.Text;
+                var reservationsResponse = await api.GetReservations(email);
+                if (reservationsResponse == null)
+                {
+                    return;
+                }
+                reservations = new List<ReservationResponse>(reservationsResponse);
+                ReservationsList.Items.Clear();
+
+                foreach (ReservationResponse res in reservations)
+                {
+                    ReservationsList.Items.Add($"{res.CabinAddress}, {res.ServiceType}, {res.ScheduledDate} ,{res.id}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in RenderReservations" + ex.Message);
+            }
         }
 
         private void EmailTextBox_TextChanged(object sender, EventArgs e)
@@ -152,6 +178,7 @@ namespace CabinServicesApp
             chosenDateTime = dateTimePicker1.Value;
             chosenDateString = chosenDateTime.ToShortDateString();
             var splitted = chosenDateString.Split('.');
+            // Formats the date around so it gets accepted by sql database
             chosenDateString = $"{splitted[2]}-{splitted[1]}-{splitted[0]}";
         }
 
@@ -159,6 +186,9 @@ namespace CabinServicesApp
         {
             try
             {
+                FailSaveLabel.Visible = false;
+                SaveProgress.Visible = true;
+                SaveProgress.Value = 0;
                 var reservation = new Reservation()
                 {
                     ServiceId = chosenService.id,
@@ -168,7 +198,19 @@ namespace CabinServicesApp
                     CabinAddress = chosenCabin.address,
                     ScheduledDate = chosenDateString
                 };
-                await api.SaveReservation(reservation);
+                var result = await api.SaveReservation(reservation);
+
+                if (result)
+                {
+                    SaveProgress.Value = 100;
+                    RenderReservations();
+                }
+                else
+                {
+                    SaveProgress.Visible = false;
+                    FailSaveLabel.Visible = true;
+                }
+
             }
             catch (Exception ex)
             {
