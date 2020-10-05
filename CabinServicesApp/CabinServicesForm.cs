@@ -80,7 +80,8 @@ namespace CabinServicesApp
 
         private async void RenderCabinInfo(string selected)
         {
-            var cabinId = selected.Split(',')[2];
+            var split = selected.Split(',');
+            var cabinId = split[split.Length - 1];
             chosenCabin = cabins.Find(c => c._id == cabinId);
             ChosenCabinInfo.Text = $"" +
                 $" {chosenCabin.address} " +
@@ -111,7 +112,8 @@ namespace CabinServicesApp
 
         private async void RenderServiceInfo(string selected)
         {
-            var serviceId = Int32.Parse(selected.Split(',')[3]);
+            var split = selected.Split(',');
+            var serviceId = Int32.Parse(split[split.Length - 1]);
             chosenService = services.Find(s => s.id == serviceId);
             ChosenServiceInfo.Text = $"" +
                 $" Type: {chosenService.ServiceType} " +
@@ -285,7 +287,6 @@ namespace CabinServicesApp
 
         private async void ModifyButton_Click(object sender, EventArgs e)
         {
-            ClearModifyFields();
 
             // Checks that a reservation is actually chosen. 0 is a default for no cabin chosen.
             if (chosenResId == 0)
@@ -349,6 +350,7 @@ namespace CabinServicesApp
 
                 if (result)
                 {
+                    ClearModifyFields();
                     ModifyProgress.Value = 100;
                     NoReservationLabel.Visible = false;
                     chosenResId = 0;
@@ -356,6 +358,7 @@ namespace CabinServicesApp
                 }
                 else
                 {
+                    ClearModifyFields();
                     Debug.WriteLine("Failed modify");
                     ModifyProgress.Visible = false;
                     FailModifyLabel.Visible = true;
@@ -365,6 +368,7 @@ namespace CabinServicesApp
             }
             catch (Exception ex)
             {
+                ClearModifyFields();
                 Debug.WriteLine("Exception saving reservation: " + ex.Message);
             }
         }

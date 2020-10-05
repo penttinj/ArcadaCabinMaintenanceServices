@@ -33,6 +33,8 @@
             this.WelcomeLabel = new System.Windows.Forms.Label();
             this.WelcomePanel = new System.Windows.Forms.Panel();
             this.LoggedInPanel = new System.Windows.Forms.Panel();
+            this.ReservationsLabel = new System.Windows.Forms.Label();
+            this.NoReservationLabel = new System.Windows.Forms.Label();
             this.ModifyProgress = new System.Windows.Forms.ProgressBar();
             this.FailModifyLabel = new System.Windows.Forms.Label();
             this.ModifyButton = new System.Windows.Forms.Button();
@@ -49,7 +51,7 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.ServicesList = new System.Windows.Forms.ListBox();
             this.CabinsList = new System.Windows.Forms.ListBox();
-            this.NoReservationLabel = new System.Windows.Forms.Label();
+            this.CabinsLabel = new System.Windows.Forms.Label();
             this.WelcomePanel.SuspendLayout();
             this.LoggedInPanel.SuspendLayout();
             this.SuspendLayout();
@@ -96,6 +98,8 @@
             // 
             // LoggedInPanel
             // 
+            this.LoggedInPanel.Controls.Add(this.CabinsLabel);
+            this.LoggedInPanel.Controls.Add(this.ReservationsLabel);
             this.LoggedInPanel.Controls.Add(this.NoReservationLabel);
             this.LoggedInPanel.Controls.Add(this.ModifyProgress);
             this.LoggedInPanel.Controls.Add(this.FailModifyLabel);
@@ -118,6 +122,27 @@
             this.LoggedInPanel.Size = new System.Drawing.Size(773, 475);
             this.LoggedInPanel.TabIndex = 5;
             this.LoggedInPanel.Visible = false;
+            // 
+            // ReservationsLabel
+            // 
+            this.ReservationsLabel.AutoSize = true;
+            this.ReservationsLabel.Location = new System.Drawing.Point(611, 25);
+            this.ReservationsLabel.Name = "ReservationsLabel";
+            this.ReservationsLabel.Size = new System.Drawing.Size(69, 13);
+            this.ReservationsLabel.TabIndex = 18;
+            this.ReservationsLabel.Text = "Reservations";
+            // 
+            // NoReservationLabel
+            // 
+            this.NoReservationLabel.AutoSize = true;
+            this.NoReservationLabel.Cursor = System.Windows.Forms.Cursors.Default;
+            this.NoReservationLabel.ForeColor = System.Drawing.Color.IndianRed;
+            this.NoReservationLabel.Location = new System.Drawing.Point(565, 390);
+            this.NoReservationLabel.Name = "NoReservationLabel";
+            this.NoReservationLabel.Size = new System.Drawing.Size(141, 13);
+            this.NoReservationLabel.TabIndex = 17;
+            this.NoReservationLabel.Text = "No reservation was selected";
+            this.NoReservationLabel.Visible = false;
             // 
             // ModifyProgress
             // 
@@ -214,11 +239,13 @@
             // ChosenCabinInfo
             // 
             this.ChosenCabinInfo.AutoSize = true;
+            this.ChosenCabinInfo.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
             this.ChosenCabinInfo.Location = new System.Drawing.Point(269, 44);
             this.ChosenCabinInfo.Name = "ChosenCabinInfo";
             this.ChosenCabinInfo.Size = new System.Drawing.Size(55, 13);
             this.ChosenCabinInfo.TabIndex = 5;
             this.ChosenCabinInfo.Text = "Cabin Info";
+            this.ChosenCabinInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.ChosenCabinInfo.Click += new System.EventHandler(this.ChosenCabinInfo_Click);
             // 
             // ReservationsList
@@ -267,17 +294,14 @@
             this.CabinsList.TabIndex = 0;
             this.CabinsList.SelectedIndexChanged += new System.EventHandler(this.CabinsList_SelectedIndexChanged);
             // 
-            // NoReservationLabel
+            // CabinsLabel
             // 
-            this.NoReservationLabel.AutoSize = true;
-            this.NoReservationLabel.Cursor = System.Windows.Forms.Cursors.Default;
-            this.NoReservationLabel.ForeColor = System.Drawing.Color.IndianRed;
-            this.NoReservationLabel.Location = new System.Drawing.Point(565, 390);
-            this.NoReservationLabel.Name = "NoReservationLabel";
-            this.NoReservationLabel.Size = new System.Drawing.Size(141, 13);
-            this.NoReservationLabel.TabIndex = 17;
-            this.NoReservationLabel.Text = "No reservation was selected";
-            this.NoReservationLabel.Visible = false;
+            this.CabinsLabel.AutoSize = true;
+            this.CabinsLabel.Location = new System.Drawing.Point(89, 25);
+            this.CabinsLabel.Name = "CabinsLabel";
+            this.CabinsLabel.Size = new System.Drawing.Size(39, 13);
+            this.CabinsLabel.TabIndex = 19;
+            this.CabinsLabel.Text = "Cabins";
             // 
             // CabinServicesForm
             // 
@@ -319,6 +343,8 @@
         private System.Windows.Forms.ProgressBar ModifyProgress;
         private System.Windows.Forms.Label FailModifyLabel;
         private System.Windows.Forms.Label NoReservationLabel;
+        private System.Windows.Forms.Label ReservationsLabel;
+        private System.Windows.Forms.Label CabinsLabel;
     }
 }
 
