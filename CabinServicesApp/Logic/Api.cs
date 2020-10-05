@@ -23,7 +23,7 @@ namespace CabinServicesApp.Logic
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"https://localhost:44378/cabins/{email}"),
+                RequestUri = new Uri($"https://arcadacmsapi20201005115126.azurewebsites.net/cabins/{email}"),
                 Method = HttpMethod.Get
             };
             request.Headers.Authorization = new AuthenticationHeaderValue(jwt);
@@ -60,7 +60,7 @@ namespace CabinServicesApp.Logic
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"https://localhost:44378/services"),
+                RequestUri = new Uri($"https://arcadacmsapi20201005115126.azurewebsites.net/services"),
                 Method = HttpMethod.Get
             };
             
@@ -87,7 +87,7 @@ namespace CabinServicesApp.Logic
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
-                RequestUri = new Uri($"https://localhost:44378/reservations/{email}"),
+                RequestUri = new Uri($"https://arcadacmsapi20201005115126.azurewebsites.net/reservations/{email}"),
                 Method = HttpMethod.Get
             };
             HttpResponseMessage message = await client.SendAsync(request);
@@ -113,7 +113,7 @@ namespace CabinServicesApp.Logic
             string jsonObject = new JavaScriptSerializer().Serialize(reservation);
             StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync("https://localhost:44378/reservations", content);
+            var response = await client.PostAsync("https://arcadacmsapi20201005115126.azurewebsites.net/reservations", content);
             if (response.StatusCode == HttpStatusCode.Created)
             {
                 return true;
@@ -127,7 +127,7 @@ namespace CabinServicesApp.Logic
             string jsonObject = new JavaScriptSerializer().Serialize(reservation);
             StringContent content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
-            var response = await client.PutAsync($"https://localhost:44378/reservations/{reservationId}", content);
+            var response = await client.PutAsync($"https://arcadacmsapi20201005115126.azurewebsites.net/reservations/{reservationId}", content);
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 return true;
@@ -139,7 +139,7 @@ namespace CabinServicesApp.Logic
         {
             HttpClient client = new HttpClient();
 
-            var response = await client.DeleteAsync($"https://localhost:44378/reservations/{reservationId}");
+            var response = await client.DeleteAsync($"https://arcadacmsapi20201005115126.azurewebsites.net/reservations/{reservationId}");
             if (response.StatusCode == HttpStatusCode.NoContent)
             {
                 return true;
